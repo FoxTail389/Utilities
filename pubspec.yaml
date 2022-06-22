@@ -88,6 +88,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    - family: Poppins
+    - family: MyriadPro
       fonts:
-        - asset: fonts/Poppins-Regular.ttf
+        - asset: fonts/MyriadPro-Regular.otf

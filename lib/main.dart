@@ -1,11 +1,14 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'calculator.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -19,25 +22,22 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      title: "Utilities",
+      theme: ThemeData(
+        primaryColor: Colors.black,
+        textTheme: TextTheme(
+          bodyText1: TextStyle(color: Colors.white, fontFamily: "MyriadPro"),
+          bodyText2: TextStyle(color: Colors.white, fontFamily: "MyriadPro"),
+          button: TextStyle(color: Colors.white, fontFamily: "MyriadPro"),
+        ),
+      ),
+      home: const HomePage(),
     );
   }
 }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -50,9 +50,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         toolbarHeight: 36,
         title: const Text("Utilities"),
-        backgroundColor: const Color.fromARGB(255, 110, 0, 140),
+        backgroundColor: Colors.black,
         titleTextStyle: const TextStyle(
-          fontFamily: "Poppins",
+          fontFamily: "MyriadPro",
           color: Colors.white,
           fontSize: 24,
         ),
@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
+        color: Colors.black,
         child: LayoutBuilder(
           builder: (context, constraints) {
             int crossCount = 0;
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (BuildContext context) => const Calculator(),
+                        builder: (BuildContext context) => Calculator(),
                       ),
                     );
                   },
@@ -105,32 +106,14 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             label: "Settings",
             icon: Icon(Icons.settings),
-          )
+          ),
         ],
+        backgroundColor: Colors.black,
+        unselectedItemColor: const Color.fromARGB(255, 100, 0, 0),
+        selectedLabelStyle: TextStyle(fontFamily: "MyriadPro"),
+        unselectedLabelStyle: TextStyle(fontFamily: "MyriadPro"),
+        fixedColor: Colors.red,
       ),
-    );
-  }
-}
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-class Calculator extends StatelessWidget {
-  const Calculator({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
     );
   }
 }
