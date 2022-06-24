@@ -1,18 +1,46 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
 
-class Calculator extends StatefulWidget {
-  Calculator({Key? key}) : super(key: key);
+void main() => runApp(MyApp());
 
+class MyApp extends StatelessWidget {
   @override
-  State<Calculator> createState() => _CalculatorState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Calculator(),
+    );
+  }
+}
+
+class Calculator extends StatefulWidget {
+  @override
+  _CalculatorState createState() => _CalculatorState();
 }
 
 class _CalculatorState extends State<Calculator> {
-  Widget numButton(String btnText, Color btnColor, Color txtColor) {
+  dynamic displaytxt = 20;
+  dynamic finalResult = '';
+  double numOne = 0;
+  double numTwo = 0;
+  String oldNum1 = '';
+  String operation = "";
+  dynamic opr = '';
+  dynamic preOpr = '';
+  dynamic result = '';
+  //Calculator logic
+  dynamic text = '0';
+
+  //Button Widget
+  Widget calcbutton(
+      String btnText, Color btnColor, Color txtColor, double fntSize) {
     return ElevatedButton(
-      onPressed: () => {},
+      onPressed: () {
+        calculation(btnText);
+      },
       style: ElevatedButton.styleFrom(
         fixedSize: Size(70, 70),
         shape: CircleBorder(),
@@ -21,11 +49,125 @@ class _CalculatorState extends State<Calculator> {
       child: Text(
         btnText,
         style: TextStyle(
-          fontSize: 25,
-          color: txtColor,
-        ),
+            color: txtColor, fontFamily: "Josefin Sans", fontSize: fntSize),
       ),
     );
+  }
+
+  void calculation(btnText) {
+    if (btnText == 'AC') {
+      text = '0';
+      numOne = 0;
+      numTwo = 0;
+      result = '';
+      finalResult = '0';
+      opr = '';
+      preOpr = '';
+      oldNum1 = '';
+      operation = '';
+    } else if (opr == '=' && btnText == '=') {
+      if (preOpr == '+') {
+        finalResult = add();
+      } else if (preOpr == '-') {
+        finalResult = sub();
+      } else if (preOpr == 'x') {
+        finalResult = mul();
+      } else if (preOpr == '/') {
+        finalResult = div();
+      }
+    } else if (btnText == '+' ||
+        btnText == '-' ||
+        btnText == 'x' ||
+        btnText == '/' ||
+        btnText == '=' ||
+        btnText == "^") {
+      if (numOne == 0) {
+        numOne = double.parse(result);
+      } else {
+        numTwo = double.parse(result);
+      }
+
+      if (opr == '+') {
+        finalResult = add();
+        operation = "+";
+      } else if (opr == '-') {
+        finalResult = sub();
+        operation = '-';
+      } else if (opr == 'x') {
+        finalResult = mul();
+        operation = "x";
+      } else if (opr == '/') {
+        finalResult = div();
+        operation = "/";
+      } else if (opr == "^") {
+        finalResult = pwr();
+        operation = "^";
+      }
+      preOpr = opr;
+      opr = btnText;
+      result = '';
+    } else if (btnText == '.') {
+      if (!result.toString().contains('.')) {
+        result = result.toString() + '.';
+      }
+      finalResult = result;
+    } else if (btnText == '+/-') {
+      result.toString().startsWith('-')
+          ? result = result.toString().substring(1)
+          : result = '-' + result.toString();
+      finalResult = result;
+    } else {
+      result = result + btnText;
+      finalResult = result;
+    }
+
+    setState(() {
+      text = finalResult;
+    });
+  }
+
+  String add() {
+    oldNum1 = numOne.toString();
+    result = (numOne + numTwo).toString();
+    numOne = double.parse(result);
+    return doesContainDecimal(result);
+  }
+
+  String sub() {
+    oldNum1 = numOne.toString();
+    result = (numOne - numTwo).toString();
+    numOne = double.parse(result);
+    return doesContainDecimal(result);
+  }
+
+  String mul() {
+    oldNum1 = numOne.toString();
+    result = (numOne * numTwo).toString();
+    numOne = double.parse(result);
+    return doesContainDecimal(result);
+  }
+
+  String pwr() {
+    oldNum1 = numOne.toString();
+    result = (pow(numOne, numTwo)).toString();
+    numOne = double.parse(result);
+    return doesContainDecimal(result);
+  }
+
+  String div() {
+    oldNum1 = numOne.toString();
+    result = (numOne / numTwo).toString();
+    numOne = double.parse(result);
+    return doesContainDecimal(result);
+  }
+
+  String doesContainDecimal(dynamic result) {
+    if (result.toString().contains('.')) {
+      List<String> splitDecimal = result.toString().split('.');
+      if (!(int.parse(splitDecimal[1]) > 0))
+        return result = splitDecimal[0].toString();
+    }
+    return result;
   }
 
   @override
@@ -35,35 +177,48 @@ class _CalculatorState extends State<Calculator> {
       return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          toolbarHeight: 36,
+          toolbarHeight: 26,
           title: const Text("Calculator"),
           centerTitle: true,
           backgroundColor: Colors.black,
           titleTextStyle: const TextStyle(
             fontFamily: "MyriadPro",
             color: Colors.white,
-            fontSize: 35,
+            fontSize: 25,
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 5,
-          ),
+          padding: EdgeInsets.symmetric(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
+            children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
+                children: [
                   Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.symmetric(),
                     child: Text(
-                      "0",
+                      (oldNum1.toString() + operation + numTwo.toString()),
+                      style: TextStyle(
+                        color: Color.fromARGB(100, 255, 255, 255),
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(),
+                    child: Text(
+                      '$text',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 80,
+                        fontSize: 100,
                       ),
                     ),
                   )
@@ -72,10 +227,11 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  numButton("C", Colors.grey, Colors.black),
-                  numButton("+/-", Colors.grey, Colors.black),
-                  numButton("%", Colors.grey, Colors.black),
-                  numButton("/", Colors.orange, Colors.white),
+                  calcbutton("AC", Colors.teal, Colors.black, 25),
+                  calcbutton("+/-", Colors.teal, Colors.black, 25),
+                  calcbutton("^", Colors.teal, Colors.black, 30),
+                  calcbutton(
+                      "/", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -84,10 +240,14 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  numButton("7", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("8", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("9", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("x", Colors.orange, Colors.white),
+                  calcbutton(
+                      "7", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "8", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "9", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "x", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -96,10 +256,14 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  numButton("4", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("5", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("6", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("-", Colors.orange, Colors.white),
+                  calcbutton(
+                      "4", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "5", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "6", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "-", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -108,10 +272,14 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  numButton("1", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("2", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("3", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("+", Colors.orange, Colors.white),
+                  calcbutton(
+                      "1", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "2", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "3", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "+", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -121,7 +289,9 @@ class _CalculatorState extends State<Calculator> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () => {},
+                    onPressed: () {
+                      calculation("0");
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: StadiumBorder(),
                       primary: Color.fromARGB(255, 49, 49, 49),
@@ -131,14 +301,16 @@ class _CalculatorState extends State<Calculator> {
                       child: Text(
                         "0",
                         style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.white,
-                        ),
+                            color: Colors.white,
+                            fontFamily: "Josefin Sans",
+                            fontSize: 30),
                       ),
                     ),
                   ),
-                  numButton(".", Color.fromARGB(255, 49, 49, 49), Colors.white),
-                  numButton("=", Colors.orange, Colors.white),
+                  calcbutton(
+                      ".", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
+                  calcbutton(
+                      "=", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               )
             ],
@@ -149,35 +321,50 @@ class _CalculatorState extends State<Calculator> {
       return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          toolbarHeight: 36,
+          toolbarHeight: 26,
           title: const Text("Calculator"),
           centerTitle: true,
           backgroundColor: Colors.black,
           titleTextStyle: const TextStyle(
-            fontFamily: "MyriadPro",
+            fontFamily: "Josefin Sans",
             color: Colors.white,
-            fontSize: 35,
+            fontSize: 25,
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 5,
-          ),
+          padding: EdgeInsets.symmetric(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(10),
                     child: Text(
-                      "0",
+                      (oldNum1.toString() + operation + numTwo.toString()),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color.fromARGB(100, 255, 255, 255),
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      '$text',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 80,
+                        fontSize: 100,
                       ),
                     ),
                   )
@@ -186,22 +373,20 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  numButton("C", Colors.grey, Colors.black),
+                  calcbutton("AC", Colors.teal, Colors.black, 25),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("+/-", Colors.grey, Colors.black),
+                  calcbutton("+/-", Colors.teal, Colors.black, 25),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("%", Colors.grey, Colors.black),
+                  calcbutton("^", Colors.teal, Colors.black, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("/", Colors.orange, Colors.white),
-                  SizedBox(
-                    width: 25,
-                  ),
+                  calcbutton(
+                      "/", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -210,22 +395,23 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  numButton("7", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "7", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("8", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "8", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("9", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "9", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("x", Colors.orange, Colors.white),
-                  SizedBox(
-                    width: 25,
-                  ),
+                  calcbutton(
+                      "x", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -234,22 +420,23 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  numButton("4", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "4", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("5", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "5", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("6", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "6", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("-", Colors.orange, Colors.white),
-                  SizedBox(
-                    width: 25,
-                  ),
+                  calcbutton(
+                      "-", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -258,22 +445,23 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  numButton("1", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "1", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("2", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "2", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("3", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      "3", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("+", Colors.orange, Colors.white),
-                  SizedBox(
-                    width: 25,
-                  ),
+                  calcbutton(
+                      "+", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               ),
               SizedBox(
@@ -283,7 +471,9 @@ class _CalculatorState extends State<Calculator> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () => {},
+                    onPressed: () {
+                      calculation("0");
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: StadiumBorder(),
                       primary: Color.fromARGB(255, 49, 49, 49),
@@ -293,23 +483,22 @@ class _CalculatorState extends State<Calculator> {
                       child: Text(
                         "0",
                         style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.white,
-                        ),
+                            color: Colors.white,
+                            fontFamily: "Josefin Sans",
+                            fontSize: 30),
                       ),
                     ),
                   ),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton(".", Color.fromARGB(255, 49, 49, 49), Colors.white),
+                  calcbutton(
+                      ".", Color.fromARGB(255, 49, 49, 49), Colors.white, 30),
                   SizedBox(
                     width: 25,
                   ),
-                  numButton("=", Colors.orange, Colors.white),
-                  SizedBox(
-                    width: 25,
-                  ),
+                  calcbutton(
+                      "=", Color.fromARGB(255, 0, 48, 120), Colors.white, 30),
                 ],
               )
             ],

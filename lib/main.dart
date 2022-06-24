@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'calculator.dart';
 
 void main() {
@@ -16,8 +17,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String buttonName1 = "Calculator";
-  bool isClicked = false;
   int currentIndex = 0;
+  bool isClicked = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,9 +28,9 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.black,
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.white, fontFamily: "MyriadPro"),
-          bodyText2: TextStyle(color: Colors.white, fontFamily: "MyriadPro"),
-          button: TextStyle(color: Colors.white, fontFamily: "MyriadPro"),
+          bodyText1: GoogleFonts.hind(color: Colors.white),
+          bodyText2: GoogleFonts.hind(color: Colors.white),
+          button: GoogleFonts.hind(color: Colors.white),
         ),
       ),
       home: const HomePage(),
