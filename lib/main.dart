@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'calculator.dart';
@@ -74,28 +74,19 @@ class _HomePageState extends State<HomePage> {
             } else {
               crossCount = 1;
             }
-            return GridView.count(
-              mainAxisSpacing: 20,
-              crossAxisCount: crossCount,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      onPrimary: Colors.black,
-                      primary: const Color.fromARGB(255, 118, 118, 118),
-                      elevation: 20,
-                      fixedSize: const Size(345, 213)),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => Calculator(),
-                      ),
-                    );
-                  },
-                  child: Image.network(
-                      "https://raw.githubusercontent.com/FoxTail389/Utilities/main/images/Calculator.png"),
-                ),
-              ],
-            );
+            return StaggeredGrid.count(
+                mainAxisSpacing: 20,
+                crossAxisCount: crossCount,
+                children: [
+                  StaggeredGridTile.count(
+                      crossAxisCellCount: 1,
+                      mainAxisCellCount: 0.61739130434,
+                      child: ElevatedButton(
+                        onPressed: () => {},
+                        child: Image.network(
+                            "https://raw.githubusercontent.com/FoxTail389/Utilities/main/images/Calculator.png"),
+                      )),
+                ]);
           },
         ),
       ),
