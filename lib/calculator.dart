@@ -49,7 +49,7 @@ class _CalculatorState extends State<Calculator> {
       child: Text(
         btnText,
         style: TextStyle(
-            color: txtColor, fontFamily: "Josefin Sans", fontSize: fntSize),
+            color: txtColor, fontFamily: "JosefinSans", fontSize: fntSize),
       ),
     );
   }
@@ -182,7 +182,7 @@ class _CalculatorState extends State<Calculator> {
           centerTitle: true,
           backgroundColor: Colors.black,
           titleTextStyle: const TextStyle(
-            fontFamily: "MyriadPro",
+            fontFamily: "JosefinSans",
             color: Colors.white,
             fontSize: 25,
           ),
@@ -340,6 +340,7 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(width: 300),
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
@@ -357,6 +358,7 @@ class _CalculatorState extends State<Calculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(width: 300),
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(

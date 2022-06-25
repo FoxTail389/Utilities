@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Utilities"),
         backgroundColor: Colors.black,
         titleTextStyle: const TextStyle(
-          fontFamily: "MyriadPro",
+          fontFamily: "JosefinSans",
           color: Colors.white,
           fontSize: 24,
         ),
@@ -75,18 +75,32 @@ class _HomePageState extends State<HomePage> {
               crossCount = 1;
             }
             return StaggeredGrid.count(
-                mainAxisSpacing: 20,
-                crossAxisCount: crossCount,
-                children: [
-                  StaggeredGridTile.count(
-                      crossAxisCellCount: 1,
-                      mainAxisCellCount: 0.61739130434,
-                      child: ElevatedButton(
-                        onPressed: () => {},
-                        child: Image.network(
-                            "https://raw.githubusercontent.com/FoxTail389/Utilities/main/images/Calculator.png"),
-                      )),
-                ]);
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              crossAxisCount: crossCount,
+              children: [
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 0.61739130434,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        onPrimary: Colors.black,
+                        primary: Colors.teal,
+                        elevation: 20,
+                        fixedSize: const Size(345, 213)),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => Calculator(),
+                        ),
+                      );
+                    },
+                    child: Image.network(
+                        "https://raw.githubusercontent.com/FoxTail389/Utilities/main/items/Calculator.png"),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),
